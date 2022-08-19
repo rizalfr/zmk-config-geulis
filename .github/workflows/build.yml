@@ -12,9 +12,9 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     container:
-      image: zmkfirmware/zmk-build-arm:2.5
+      image: zmkfirmware/zmk-build-arm:stable
     strategy:
       fail-fast: false
       matrix:
@@ -62,9 +62,6 @@ jobs:
           echo ::set-output name=artifact-name::${ARTIFACT_NAME}
       - name: Build (west build)
         run: west build -s zmk/app -b ${{ matrix.board }} -- ${{ steps.variables.outputs.shield-arg }} -DZMK_CONFIG="${GITHUB_WORKSPACE}/zmk-config"
-      - name: Generated DTS file
-        if: always()
-        run: cat -n build/zephyr/${{ matrix.board }}.dts.pre.tmp
       - name: Rename artifacts
         run: |
           mkdir build/artifacts
